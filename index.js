@@ -26,8 +26,32 @@ app.get('/update-cobj', async (req, res) => {
 
 // * Code for Route 3 goes here
 
-/** 
-* * This is sample code to give you a reference for how you should structure your calls. 
+app.post('/update-cobj', async (req, res) => {
+    const update = {
+        properties: {
+            ...req.body
+        }
+    }
+
+    const index = req.query.index;
+
+    const updateCobj = `https://api.hubapi.com/crm/v3/objects/pokemons/${index}?idProperty=index`
+    const headers = {
+        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+        "Content-Type": "application/json"
+    }
+
+    try {
+        await axios.patch(updateCobj, update, { headers })
+        res.redirect('/')
+
+    } catch (e) {
+        console.error(e)
+    }
+})
+
+/**
+* * This is sample code to give you a reference for how you should structure your calls.
 
 * * App.get sample
 app.get('/contacts', async (req, res) => {
@@ -39,7 +63,7 @@ app.get('/contacts', async (req, res) => {
     try {
         const resp = await axios.get(contacts, { headers });
         const data = resp.data.results;
-        res.render('contacts', { title: 'Contacts | HubSpot APIs', data });      
+        res.render('contacts', { title: 'Contacts | HubSpot APIs', data });
     } catch (error) {
         console.error(error);
     }
@@ -60,7 +84,7 @@ app.post('/update', async (req, res) => {
         'Content-Type': 'application/json'
     };
 
-    try { 
+    try {
         await axios.patch(updateContact, update, { headers } );
         res.redirect('back');
     } catch(err) {
