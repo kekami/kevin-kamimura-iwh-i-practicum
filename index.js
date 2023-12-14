@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const axios = require('axios');
 const app = express();
@@ -8,11 +9,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // * Please DO NOT INCLUDE the private app access token in your repo. Don't do this practicum in your normal account.
-const PRIVATE_APP_ACCESS = '';
+const PRIVATE_APP_ACCESS = process.env.API_KEY;
 
 // TODO: ROUTE 1 - Create a new app.get route for the homepage to call your custom object data. Pass this data along to the front-end and create a new pug template in the views folder.
 
 // * Code for Route 1 goes here
+
+app.get('/', async (req, res) => {
+    const pokemons = 'https://api.hubapi.com/crm/v3/objects/pokemons?properties=name,index,type';
+    const headers = {
+        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+        "Content-Type": "application/json"
+    }
+    try {
+        const response = await axios.get(pokemons, { headers });
+        const data = response.data.results;
+
+        res.render('homepage', { title: "Custom Object Table", data })
+    } catch (e) {
+        console.error(e)
+    }
+})
 
 // TODO: ROUTE 2 - Create a new app.get route for the form to create or update new custom object data. Send this data along in the next route.
 
@@ -33,16 +50,14 @@ app.post('/update-cobj', async (req, res) => {
         }
     }
 
-    const index = req.query.index;
-
-    const updateCobj = `https://api.hubapi.com/crm/v3/objects/pokemons/${index}?idProperty=index`
+    const updateCobj = `https://api.hubapi.com/crm/v3/objects/pokemons`
     const headers = {
         Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
         "Content-Type": "application/json"
     }
 
     try {
-        await axios.patch(updateCobj, update, { headers })
+        await axios.post(updateCobj, update, { headers })
         res.redirect('/')
 
     } catch (e) {

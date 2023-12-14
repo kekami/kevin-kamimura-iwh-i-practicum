@@ -5,4 +5,16 @@ html
         meta(name="viewport" content="width=device-width, initial-scale=1")
         link(rel="stylesheet", href="/css/style.css")
     body
+
+        h1 Add a Pokemon
+
         a(href="/") Return to the homepage
+
+        form(action="/update-cobj", method="POST")
+            p Index
+                input(type="text", name="index", value='')
+            p Name
+                input(type="text", name="name", value='')
+            p Type
+                input(type="text", name="type", value='')
+            input(type="submit", value='Submit')

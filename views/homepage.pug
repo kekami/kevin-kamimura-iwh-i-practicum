@@ -1,0 +1,20 @@
+doctype html
+html
+    head
+        title= `${title}`
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(rel="stylesheet", href="/css/style.css")
+    body
+        h1 #{title}
+
+        a(href="/update-cobj") Add/Update this table
+        table()
+            tr
+                th Index
+                th Name
+                th Type
+            each pokemon in data
+                tr
+                    td #{pokemon.properties.index}
+                    td #{pokemon.properties.name}
+                    td #{pokemon.properties.type}
